@@ -1,0 +1,32 @@
+{
+    "name": "arduino-fsm",
+    "version": "2.2.0",
+    "description": "Supports events for exiting and entering states.",
+    "keywords": "",
+    "repository":
+    {
+      "type": "git",
+      "url": "https://github.com/username/hello-world.git"
+    },
+    "authors":
+    [
+      {
+        "name": "John Smith",
+        "email": "me@john-smith.com",
+        "url": "https://www.john-smith/contact"
+      },
+      {
+        "name": "Andrew Smith",
+        "email": "me@andrew-smith.com",
+        "url": "https://www.andrew-smith/contact",
+        "maintainer": true
+      }
+    ],
+    "license": "MIT",
+    "homepage": "https://www.helloworld.org/",
+    "dependencies": {
+
+    },
+    "frameworks": "*",
+    "platforms": "*"
+  }

@@ -39,7 +39,7 @@ public:
   Fsm(State* initial_state);
   ~Fsm();
 
-  void add_transition(State* state_from, State* state_to, int event,
+  void add_transition(State* state_from, State* state_to, bool(*evaluate)(void),
                       void (*on_transition)());
 
   void add_timed_transition(State* state_from, State* state_to,
@@ -47,7 +47,7 @@ public:
 
   void check_timed_transitions();
 
-  void trigger(int event);
+  void check_transition();
   void run_machine();
 
 private:
@@ -55,7 +55,7 @@ private:
   {
     State* state_from;
     State* state_to;
-    int event;
+    bool(*evaluate)(void);
     void (*on_transition)();
 
   };
@@ -67,7 +67,7 @@ private:
   };
 
   static Transition create_transition(State* state_from, State* state_to,
-                                      int event, void (*on_transition)());
+                                  bool(*evaluate)(void), void (*on_transition)());
 
   void make_transition(Transition* transition);
 

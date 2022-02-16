@@ -43,13 +43,13 @@ Fsm::~Fsm()
 }
 
 
-void Fsm::add_transition(State* state_from, State* state_to, int event,
+void Fsm::add_transition(State* state_from, State* state_to, bool(*evaluate)(void),
                          void (*on_transition)())
 {
   if (state_from == NULL || state_to == NULL)
     return;
 
-  Transition transition = Fsm::create_transition(state_from, state_to, event,
+  Transition transition = Fsm::create_transition(state_from, state_to, evaluate,
                                                on_transition);
   m_transitions = (Transition*) realloc(m_transitions, (m_num_transitions + 1)
                                                        * sizeof(Transition));
@@ -80,26 +80,26 @@ void Fsm::add_timed_transition(State* state_from, State* state_to,
 
 
 Fsm::Transition Fsm::create_transition(State* state_from, State* state_to,
-                                       int event, void (*on_transition)())
+                                       bool(*evaluate)(void), void (*on_transition)())
 {
   Transition t;
   t.state_from = state_from;
   t.state_to = state_to;
-  t.event = event;
+  t.evaluate = evaluate;
   t.on_transition = on_transition;
 
   return t;
 }
 
-void Fsm::trigger(int event)
+void Fsm::check_transition()
 {
   if (m_initialized)
   {
-    // Find the transition with the current state and given event.
+    // Find the transition with the current state and evaluate the condition.
     for (int i = 0; i < m_num_transitions; ++i)
     {
       if (m_transitions[i].state_from == m_current_state &&
-          m_transitions[i].event == event)
+          m_transitions[i].evaluate)  //
       {
         Fsm::make_transition(&(m_transitions[i]));
         return;
@@ -145,6 +145,7 @@ void Fsm::run_machine()
     m_current_state->on_state();
     
   Fsm::check_timed_transitions();
+  Fsm::check_transition();
 }
 
 void Fsm::make_transition(Transition* transition)
