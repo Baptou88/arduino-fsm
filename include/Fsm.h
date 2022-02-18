@@ -30,6 +30,7 @@ struct State
   void (*on_enter)();
   void (*on_state)();
   void (*on_exit)();
+  unsigned long duration = 0;
 };
 
 
@@ -39,7 +40,7 @@ public:
   Fsm(State* initial_state);
   ~Fsm();
 
-  void add_transition(State* state_from, State* state_to, bool(*evaluate)(void),
+  void add_transition(State* state_from, State* state_to, bool(*evaluate)(unsigned long duration),
                       void (*on_transition)());
 
   void add_timed_transition(State* state_from, State* state_to,
@@ -55,7 +56,7 @@ private:
   {
     State* state_from;
     State* state_to;
-    bool(*evaluate)(void);
+    bool(*evaluate)(unsigned long duration);
     void (*on_transition)();
 
   };
@@ -67,7 +68,7 @@ private:
   };
 
   static Transition create_transition(State* state_from, State* state_to,
-                                  bool(*evaluate)(void), void (*on_transition)());
+                                  bool(*evaluate)(unsigned long duration), void (*on_transition)());
 
   void make_transition(Transition* transition);
 

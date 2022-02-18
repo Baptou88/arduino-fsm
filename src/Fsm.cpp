@@ -19,7 +19,8 @@
 State::State(void (*on_enter)(), void (*on_state)(), void (*on_exit)())
 : on_enter(on_enter),
   on_state(on_state),
-  on_exit(on_exit)
+  on_exit(on_exit),
+  duration(0)
 {
 }
 
@@ -43,7 +44,7 @@ Fsm::~Fsm()
 }
 
 
-void Fsm::add_transition(State* state_from, State* state_to, bool(*evaluate)(void),
+void Fsm::add_transition(State* state_from, State* state_to, bool(*evaluate)(unsigned long duration),
                          void (*on_transition)())
 {
   if (state_from == NULL || state_to == NULL)
@@ -80,7 +81,7 @@ void Fsm::add_timed_transition(State* state_from, State* state_to,
 
 
 Fsm::Transition Fsm::create_transition(State* state_from, State* state_to,
-                                       bool(*evaluate)(void), void (*on_transition)())
+                                       bool(*evaluate)(unsigned long duration), void (*on_transition)())
 {
   Transition t;
   t.state_from = state_from;
@@ -99,7 +100,7 @@ void Fsm::check_transition()
     for (int i = 0; i < m_num_transitions; ++i)
     {
       if (m_transitions[i].state_from == m_current_state &&
-          m_transitions[i].evaluate)  //
+          m_transitions[i].evaluate(millis()-m_transitions[i].state_from->duration))  //
       {
         Fsm::make_transition(&(m_transitions[i]));
         return;
@@ -165,6 +166,9 @@ void Fsm::make_transition(Transition* transition)
 
   //Initialice all timed transitions from m_current_state
   unsigned long now = millis();
+
+  m_current_state->duration = now;
+
   for (int i = 0; i < m_num_timed_transitions; ++i)
   {
     TimedTransition* ttransition = &m_timed_transitions[i];
