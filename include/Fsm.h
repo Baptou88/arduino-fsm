@@ -26,11 +26,12 @@
 
 struct State
 {
-  State(void (*on_enter)(), void (*on_state)(), void (*on_exit)());
+  State(void (*on_enter)(), void (*on_state)(), void (*on_exit)(),String Name);
   void (*on_enter)();
   void (*on_state)();
   void (*on_exit)();
   unsigned long duration = 0;
+  String Name = "";
 };
 
 
@@ -50,6 +51,8 @@ public:
 
   void check_transition();
   void run_machine();
+
+  State* getActiveState();
 
 private:
   struct Transition

@@ -16,11 +16,12 @@
 #include "Fsm.h"
 
 
-State::State(void (*on_enter)(), void (*on_state)(), void (*on_exit)())
+State::State(void (*on_enter)(), void (*on_state)(), void (*on_exit)(),String Name)
 : on_enter(on_enter),
   on_state(on_state),
   on_exit(on_exit),
-  duration(0)
+  duration(0),
+  Name(Name)
 {
 }
 
@@ -176,4 +177,8 @@ void Fsm::make_transition(Transition* transition)
       ttransition->start = now;
   }
 
+}
+
+State* Fsm::getActiveState(void){
+  return m_current_state;
 }
